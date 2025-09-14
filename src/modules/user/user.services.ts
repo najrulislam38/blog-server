@@ -31,7 +31,81 @@ const getAllUserFromDB = async () => {
   return users;
 };
 
+const getSingleUserFromDB = async (id: number) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      age: true,
+      phone: true,
+      picture: true,
+      role: true,
+      isVerified: true,
+      createdAt: true,
+      updatedAt: true,
+      posts: true,
+    },
+  });
+
+  return user;
+};
+
+const updateUserFromDB = async (
+  id: number,
+  payload: Prisma.UserUpdateInput
+) => {
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: payload,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      age: true,
+      phone: true,
+      picture: true,
+      role: true,
+      isVerified: true,
+      createdAt: true,
+      updatedAt: true,
+      posts: true,
+    },
+  });
+
+  return result;
+};
+
+const deleteUserFromDB = async (id: number) => {
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      age: true,
+      phone: true,
+      picture: true,
+      role: true,
+      isVerified: true,
+      createdAt: true,
+      updatedAt: true,
+      posts: true,
+    },
+  });
+
+  return result;
+};
+
 export const UserServices = {
   createUserFromDB,
   getAllUserFromDB,
+  getSingleUserFromDB,
+  updateUserFromDB,
+  deleteUserFromDB,
 };

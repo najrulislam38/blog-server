@@ -24,7 +24,46 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await UserServices.getSingleUserFromDB(Number(id));
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
+
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await UserServices.updateUserFromDB(Number(id), req.body);
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await UserServices.deleteUserFromDB(Number(id));
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
+  getSingleUser,
+  updateUser,
+  deleteUser,
 };
