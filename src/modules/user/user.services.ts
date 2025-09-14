@@ -24,7 +24,19 @@ const getAllUserFromDB = async () => {
       isVerified: true,
       createdAt: true,
       updatedAt: true,
-      posts: true,
+      posts: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          authorId: true,
+          tags: true,
+          thumbnail: true,
+          createdAt: true,
+          updatedAt: true,
+          view: true,
+        },
+      },
     },
   });
 
@@ -72,7 +84,19 @@ const updateUserFromDB = async (
       isVerified: true,
       createdAt: true,
       updatedAt: true,
-      posts: true,
+      posts: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          authorId: true,
+          tags: true,
+          thumbnail: true,
+          createdAt: true,
+          updatedAt: true,
+          view: true,
+        },
+      },
     },
   });
 
