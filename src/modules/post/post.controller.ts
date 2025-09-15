@@ -14,7 +14,27 @@ const createPost = async (req: Request, res: Response) => {
 
 const getAllPost = async (req: Request, res: Response) => {
   try {
-    const result = await PostService.getAllPostFromDB();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = (req.query.search as string) || "";
+    const isFeatured = req.query.isFeatured
+      ? req.query.isFeatured === "true"
+      : undefined;
+
+    const sortBy = (req.query.sortBy as string) || undefined;
+    const sortOrder = (req.query.sortOrder as string) || undefined;
+
+    const tags = req.query.tags ? (req.query.tags as string)?.split(",") : [];
+
+    const result = await PostService.getAllPostFromDB({
+      page,
+      limit,
+      search,
+      isFeatured,
+      tags,
+      sortBy,
+      sortOrder,
+    });
 
     res.status(200).json(result);
   } catch (error) {
