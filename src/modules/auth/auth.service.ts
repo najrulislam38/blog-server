@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../config/db";
 
 const loginWithEmailAndPassFromDB = async ({
@@ -25,6 +26,23 @@ const loginWithEmailAndPassFromDB = async ({
   }
 };
 
+const authWithGoogleFromDB = async (data: Prisma.UserCreateInput) => {
+  let user = await prisma.user.findUnique({
+    where: {
+      email: data?.email,
+    },
+  });
+
+  if (!user) {
+    user = await prisma.user.create({
+      data,
+    });
+  }
+
+  return user;
+};
+
 export const AuthService = {
   loginWithEmailAndPassFromDB,
+  authWithGoogleFromDB,
 };

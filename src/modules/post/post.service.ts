@@ -154,10 +154,64 @@ const deletePostFromDB = async (id: number) => {
   return result;
 };
 
+const getBlogStatus = async () => {
+  return await prisma.$transaction(async (tx) => {
+    const aggregates = await tx.post.aggregate({
+      _count: true,
+      _avg: { view: true },
+      _sum: { view: true },
+      _max: { view: true },
+      _min: { view: true },
+    });
+
+    const featuredCount = await tx.post.count({
+      where: {
+        isFeatured: true,
+      },
+    });
+
+    const topFeatured = await tx.post.findFirst({
+      where: {
+        isFeatured: true,
+      },
+      orderBy: {
+        view: "desc",
+      },
+    });
+
+    const lastWeek = new Date();
+    lastWeek.setDate(lastWeek.getDate() - 7);
+
+    const lastWeekPostCount = await tx.post.count({
+      where: {
+        createdAt: {
+          gte: lastWeek,
+        },
+      },
+    });
+
+    return {
+      status: {
+        totalPosts: aggregates._count ?? 0,
+        totalViews: aggregates._sum ?? 0,
+        averageViews: aggregates._avg ?? 0,
+        maxViews: aggregates._max ?? 0,
+        minViews: aggregates._min ?? 0,
+      },
+      featured: {
+        count: featuredCount,
+        topFeatured,
+      },
+      lastWeekPostCount,
+    };
+  });
+};
+
 export const PostService = {
   createPostFromDB,
   getAllPostFromDB,
   getSinglePostFromDB,
   updatePostFromDB,
   deletePostFromDB,
+  getBlogStatus,
 };

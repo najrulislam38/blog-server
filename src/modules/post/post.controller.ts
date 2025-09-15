@@ -81,10 +81,22 @@ const deletePost = async (req: Request, res: Response) => {
   }
 };
 
+const getBlogStatus = async (req: Request, res: Response) => {
+  try {
+    const result = await PostService.getBlogStatus();
+
+    res.status(200).json(result);
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ error: error?.message });
+  }
+};
+
 export const PostController = {
   createPost,
   getAllPost,
   getSinglePost,
   updatePost,
   deletePost,
+  getBlogStatus,
 };
